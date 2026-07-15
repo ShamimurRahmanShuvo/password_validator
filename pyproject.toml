@@ -1,0 +1,60 @@
+[build-system]
+requires = [
+    "setuptools>=68.0",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "password-validator"
+version = "1.0.0"
+description = "Highly configurable password validation library"
+readme = "README.md"
+license = { file= "LICENSE" }
+
+authors = [
+    { name = "Md Shamimur Rahman Shuvo", email = "shamimur.shuvo@gmail.com" }
+]
+
+keywords = [
+    "password",
+    "validation",
+    "security",
+    "python",
+    "authentication",
+    "validator"
+]
+
+classifiers = [
+    "Development Status :: 5 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+requires-python = ">=3.10"
+
+dependencies = [
+    "python-dotenv>=1.2.2"
+]
+
+[project.urls]
+Homepage = "https://github.com/ShamimurRahmanShuvo/password-validator"
+Repository = "https://github.com/ShamimurRahmanShuvo/password-validator"
+Documentation = "https://github.com/ShamimurRahmanShuvo/password-validator/wiki"
+Issues = "https://github.com/ShamimurRahmanShuvo/password-validator/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
