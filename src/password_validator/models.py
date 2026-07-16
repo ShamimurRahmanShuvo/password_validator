@@ -6,11 +6,11 @@ Contains data models.
 - PasswordPolicy
 """
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Any, List, Optional
 from enums import RuleType, StrengthLevel, ErrorCode
 
 
-@dataclass
+@dataclass(slots=True)
 class RuleResult:
     """
     Represents the result of a single password validation rule.
@@ -19,9 +19,10 @@ class RuleResult:
     passed: bool
     error_code: Optional[ErrorCode] = None
     message: Optional[str] = None
+    details: dict[str, Any] | None = None
 
 
-@dataclass
+@dataclass(slots=True)
 class ValidationError:
     """
     Represents a validation error for a password.
@@ -31,7 +32,7 @@ class ValidationError:
     message: str
 
 
-@dataclass
+@dataclass(slots=True)
 class ValidationResult:
     """
     Represents the result of password validation.

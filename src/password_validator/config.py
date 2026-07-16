@@ -12,7 +12,7 @@ from .constants import *
 from src.loaders.env_loader import EnvLoader
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class PasswordPolicy:
     """
     Immutable password validation policy.
@@ -24,6 +24,7 @@ class PasswordPolicy:
     require_lowercase: bool
     require_digit: bool
     require_special: bool
+    require_whitespace: bool
 
     min_uppercase: int
     min_lowercase: int
