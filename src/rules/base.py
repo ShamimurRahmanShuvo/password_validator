@@ -2,6 +2,8 @@
 Base password validation rules and their implementations.
 """
 from abc import ABC, abstractmethod
+
+from src.password_validator.enums import RuleType
 from src.password_validator.models import RuleResult
 from src.password_validator.config import PasswordPolicy
 
@@ -11,7 +13,7 @@ class ValidationRule(ABC):
     Abstract base class for password validation rules.
     """
 
-    name: str = ""
+    name: RuleType = ""
 
     @abstractmethod
     def validate(self, password: str, policy: PasswordPolicy) -> RuleResult:
