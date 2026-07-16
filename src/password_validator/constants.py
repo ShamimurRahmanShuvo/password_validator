@@ -9,6 +9,11 @@ All constants used in the password_validator package are defined here.
 DEFAULT_MIN_LENGTH = 8
 DEFAULT_MAX_LENGTH = 64
 
+DEFAULT_REQUIRE_UPPERCASE = True
+DEFAULT_REQUIRE_LOWERCASE = True
+DEFAULT_REQUIRE_DIGIT = True
+DEFAULT_REQUIRE_SPECIAL = True
+
 # Character defaults
 DEFAULT_SPECIAL_CHARACTERS = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~"
 

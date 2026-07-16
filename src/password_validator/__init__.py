@@ -9,6 +9,7 @@ from .version import (
     __author__,
     __description__
 )
+from .config import PasswordPolicy, default_policy
 
 
 # Package metadata
@@ -20,4 +21,6 @@ __all__ = [
     "__author__",
     "__description__",
     "VERSION",
+    "PasswordPolicy",
+    "default_policy"
 ]
