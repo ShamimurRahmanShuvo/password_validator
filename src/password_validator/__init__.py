@@ -10,6 +10,8 @@ from .version import (
     __description__
 )
 from .config import PasswordPolicy, default_policy
+from models import ValidationResult, ValidationError, RuleResult
+from src.rules import ValidationRule, RuleRegistry
 
 
 # Package metadata
@@ -22,5 +24,10 @@ __all__ = [
     "__description__",
     "VERSION",
     "PasswordPolicy",
-    "default_policy"
+    "default_policy",
+    "ValidationResult",
+    "ValidationError",
+    "RuleResult",
+    "ValidationRule",
+    "RuleRegistry"
 ]
