@@ -53,14 +53,16 @@ class ValidationResult:
         """
         if result.passed:
             self.passed_rules.append(result.rule)
-        else:
-            self.valid = False
 
-            self.failed_rules.append(result.rule)
-            self.errors.append(
-                ValidationError(
-                    rule=result.rule,
-                    code=result.error_code,
-                    message=result.message
-                )
+            return
+
+        self.valid = False
+
+        self.failed_rules.append(result.rule)
+        self.errors.append(
+            ValidationError(
+                rule=result.rule,
+                code=result.error_code,
+                message=result.message
             )
+        )

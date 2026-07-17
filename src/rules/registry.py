@@ -3,6 +3,12 @@ Rule registry module for managing and retrieving rules in the system.
 """
 from typing import List
 from base import ValidationRule
+from length import LengthRule
+from uppercase import UppercaseRule
+from lowercase import LowercaseRule
+from digits import DigitsRule
+from special import SpecialCharacterRule
+from whitespace import WhitespaceRule
 
 
 class RuleRegistry:
@@ -42,3 +48,21 @@ class RuleRegistry:
         Clears all registered rules from the registry.
         """
         self._rules.clear()
+
+
+def create_default_registry():
+    """
+    Creates a default rule registry with standard password validation rules.
+
+    Returns:
+        RuleRegistry: A registry populated with default rules.
+    """
+    registry = RuleRegistry()
+    registry.register(LengthRule())
+    registry.register(UppercaseRule())
+    registry.register(LowercaseRule())
+    registry.register(DigitsRule())
+    registry.register(SpecialCharacterRule())
+    registry.register(WhitespaceRule())
+
+    return registry
