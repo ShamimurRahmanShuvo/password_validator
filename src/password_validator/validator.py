@@ -3,16 +3,11 @@ Public Password Validator API
 Developers only interact with this module. It provides a single function, validate_password, which takes a password
 string as input and returns a boolean indicating whether the password is valid according to the defined rules.
 """
-"""
-validator = PasswordValidator()
-validator.validate(password)
-validator.score(password)
-validator.is_valid(password)
-"""
 from typing import Optional
 from config import PasswordPolicy, default_policy
 from engine import ValidationEngine
 from models import ValidationResult
+from .strength import PasswordStrengthScorer
 from src.rules.registry import create_default_registry
 
 
@@ -28,6 +23,7 @@ class PasswordValidator:
             policy=self.policy,
             rules=self.registry.get_rules()
         )
+        self.scorer = PasswordStrengthScorer()
 
     def validate(self, password: str) -> ValidationResult:
         """
@@ -39,7 +35,38 @@ class PasswordValidator:
         Returns:
             ValidationResult: The result of the validation, including errors and strength score.
         """
-        return self.engine.validate(password)
+        result = self.engine.validate(password)
+        score, strength = self.scorer.score(password)
+        result.score = score
+        result.strength = strength
+
+        return result
+
+    def score(self, password: str) -> int:
+        """
+        Score the given password based on various criteria.
+
+        Args:
+            password (str): The password to score.
+
+        Returns:
+            int: The strength score of the password.
+        """
+        score, _ = self.scorer.score(password)
+        return score
+
+    def strength(self, password: str):
+        """
+        Get the strength level of the given password.
+
+        Args:
+            password (str): The password to evaluate.
+
+        Returns:
+            StrengthLevel: The strength level of the password.
+        """
+        _, strength = self.scorer.score(password)
+        return strength
 
     def is_valid(self, password: str) -> bool:
         """
