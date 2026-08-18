@@ -84,3 +84,18 @@ class EnvLoader:
             return [item.strip() for item in value.split(delimiter) if item.strip()]
 
         raise InvalidConfigurationValue(f"{key}: {value} must be a list or a string")
+
+    def get_float(self, key: str, default: float = 0.0) -> float:
+        """
+        Retrieves the value of an environment variable as a float.
+
+        :param key: The environment variable key.
+        :param default: The default float value if the key is not found.
+        :return: The float value of the environment variable or the default.
+        """
+        value = self.get(key, default,)
+
+        try:
+            return float(value)
+        except (TypeError, ValueError) as exc:
+            raise InvalidConfigurationValue(f"{key}: {value} must be a valid float") from exc
