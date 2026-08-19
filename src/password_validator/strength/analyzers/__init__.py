@@ -22,6 +22,13 @@ from .keyboard import (
     KeyboardPattern,
     KeyboardPatternType
 )
+from .dictionary import (
+    DictionaryAnalyzer,
+    DictionaryAnalysis,
+    DictionaryConfig,
+    DictionaryMatch,
+    DictionaryMatchType
+)
 
 __all__ = [
     # Repeat
@@ -43,5 +50,12 @@ __all__ = [
     "KeyboardAnalysis",
     "KeyboardConfig",
     "KeyboardPattern",
-    "KeyboardPatternType"
+    "KeyboardPatternType",
+
+    # Dictionary
+    "DictionaryAnalyzer",
+    "DictionaryAnalysis",
+    "DictionaryConfig",
+    "DictionaryMatch",
+    "DictionaryMatchType"
     ]
