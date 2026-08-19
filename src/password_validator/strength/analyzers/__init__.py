@@ -15,6 +15,13 @@ from .sequential import (
     SequenceDirection,
     SequenceType
 )
+from .keyboard import (
+    KeyboardAnalyzer,
+    KeyboardAnalysis,
+    KeyboardConfig,
+    KeyboardPattern,
+    KeyboardPatternType
+)
 
 __all__ = [
     # Repeat
@@ -30,4 +37,11 @@ __all__ = [
     "SequentialPattern",
     "SequenceDirection",
     "SequenceType",
+
+    # Keyboard
+    "KeyboardAnalyzer",
+    "KeyboardAnalysis",
+    "KeyboardConfig",
+    "KeyboardPattern",
+    "KeyboardPatternType"
     ]
