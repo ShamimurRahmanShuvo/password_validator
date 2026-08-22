@@ -59,7 +59,6 @@ class StrengthWeights:
     # --------------------------------------------------
     maximum_score: int = 100
 
-
     @classmethod
     def load(cls, env_file: str = ".env") -> "StrengthWeights":
         """
