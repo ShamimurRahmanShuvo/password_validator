@@ -25,8 +25,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import re
 
-from ...config import PasswordPolicy
-from src.loaders.env_loader import EnvLoader
+from ..config import StrengthConfig
 
 
 class RepeatPatternType(str, Enum):
@@ -73,41 +72,6 @@ class RepeatAnalysis:
         return len(self.patterns)
 
 
-@dataclass(slots=True, frozen=True)
-class RepeatConfig:
-    """
-    Configuration for repeat pattern analysis.
-    """
-    enabled: bool = True
-    check_consecutive: bool = True
-    check_repeated_groups: bool = True
-    check_character_frequency: bool = True
-    max_consecutive_repeat: int = 3
-    min_repeated_group_length: int = 2
-    min_group_repetitions: int = 2
-    max_character_frequency: float = 0.3  # 30% of the password length
-
-    @classmethod
-    def load(cls, env_file: str = ".env") -> "RepeatConfig":
-        """
-        Loads the repeat configuration from environment variables.
-
-        :param env_file: Path to the .env file. Defaults to ".env".
-        :return: An instance of RepeatConfig with loaded values.
-        """
-        env_loader = EnvLoader(env_file)
-        return cls(
-            enabled=env_loader.get_bool("STRENGTH_CHECK_REPEATED_CHARACTERS", True),
-            check_consecutive=env_loader.get_bool("STRENGTH_CHECK_REPEATED_CHARACTERS", True),
-            check_repeated_groups=env_loader.get_bool("STRENGTH_CHECK_REPEATED_GROUPS", True),
-            check_character_frequency=env_loader.get_bool("STRENGTH_CHECK_CHARACTER_FREQUENCY", True),
-            max_consecutive_repeat=env_loader.get_int("STRENGTH_MAX_CONSECUTIVE_REPEAT", 3),
-            min_repeated_group_length=env_loader.get_int("STRENGTH_MIN_REPEATED_GROUP_LENGTH", 2),
-            min_group_repetitions=env_loader.get_int("STRENGTH_MIN_GROUP_REPETITIONS", 2),
-            max_character_frequency=float(env_loader.get("STRENGTH_MAX_CHARACTER_FREQUENCY", 0.3)),
-        )
-
-
 class RepeatAnalyzer:
     """
         Analyzes repeated character patterns.
@@ -125,13 +89,13 @@ class RepeatAnalyzer:
             if result.detected:
                 print(result.patterns)
     """
-    def __init__(self, config: RepeatConfig | None = None):
+    def __init__(self, config: StrengthConfig | None = None):
         """
         Initializes the RepeatAnalyzer with the given configuration.
 
         :param config: An instance of RepeatConfig. If None, default configuration is used.
         """
-        self.config = config or RepeatConfig.load()
+        self.config = config or StrengthConfig.from_env()
 
     def analyze(self, password: str) -> RepeatAnalysis:
         """

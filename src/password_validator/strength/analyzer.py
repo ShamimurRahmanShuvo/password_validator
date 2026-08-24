@@ -13,6 +13,7 @@ from .analyzers import (
     SequentialAnalysis, SequentialAnalyzer,
     KeyboardAnalysis, KeyboardAnalyzer
 )
+from .config import StrengthConfig
 
 
 @dataclass(slots=True)
@@ -61,15 +62,17 @@ class StrengthAnalyzer:
 
     def __init__(
             self,
+            config: StrengthConfig | None = None,
             repeat_analyzer: RepeatAnalyzer | None = None,
             sequential_analyzer: SequentialAnalyzer | None = None,
             keyboard_analyzer: KeyboardAnalyzer | None = None,
             dictionary_analyzer: DictionaryAnalyzer | None = None
     ):
-        self.repeat_analyzer = repeat_analyzer or RepeatAnalyzer()
-        self.sequential_analyzer = sequential_analyzer or SequentialAnalyzer()
-        self.keyboard_analyzer = keyboard_analyzer or KeyboardAnalyzer()
-        self.dictionary_analyzer = dictionary_analyzer or DictionaryAnalyzer()
+        self.config = config or StrengthConfig.from_env()
+        self.repeat_analyzer = repeat_analyzer or RepeatAnalyzer(config=self.config)
+        self.sequential_analyzer = sequential_analyzer or SequentialAnalyzer(config=self.config)
+        self.keyboard_analyzer = keyboard_analyzer or KeyboardAnalyzer(config=self.config)
+        self.dictionary_analyzer = dictionary_analyzer or DictionaryAnalyzer(config=self.config)
 
     def analyze(self, password: str) -> StrengthAnalysis:
         """

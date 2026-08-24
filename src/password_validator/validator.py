@@ -8,7 +8,7 @@ from config import PasswordPolicy, default_policy
 from engine import ValidationEngine
 from models import ValidationResult
 from .strength import PasswordStrengthScorer
-from src.rules.registry import create_default_registry
+from password_validator.rules.registry import create_default_registry
 
 
 class PasswordValidator:

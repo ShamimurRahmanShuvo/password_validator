@@ -4,7 +4,7 @@ Uppercase validation rule for password validation.
 from src.password_validator.config import PasswordPolicy
 from src.password_validator.enums import RuleType, ErrorCode
 from src.password_validator.models import RuleResult
-from src.rules.base import ValidationRule
+from password_validator.rules.base import ValidationRule
 
 
 class UppercaseRule(ValidationRule):

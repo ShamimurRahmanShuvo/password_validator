@@ -23,10 +23,9 @@ import math
 import string
 
 from ..enums import StrengthLevel
-from ..utils import EntropyCalculator
 from .analyzer import StrengthAnalysis, StrengthAnalyzer
 from .suggestions import PasswordSuggestion, SuggestionGenerator
-from .weights import StrengthWeights, default_strength_weights
+from .config import StrengthConfig
 
 
 @dataclass(slots=True, frozen=True)
@@ -141,12 +140,14 @@ class PasswordStrengthScorer:
     MIN_SCORE = 0.0
     MAX_SCORE = 100.0
 
-    def __init__(self, analyzer: StrengthAnalyzer | None = None,
-                 weights: StrengthWeights | None = None,
+    def __init__(self,
+                 config: StrengthConfig | None = None,
+                 analyzer: StrengthAnalyzer | None = None,
                  suggestion_generator: SuggestionGenerator | None = None):
 
-        self.analyzer = analyzer or StrengthAnalyzer()
-        self.weights = weights or default_strength_weights()
+        self.config = config or StrengthConfig.from_env()
+        self.analyzer = analyzer or StrengthAnalyzer(config=self.config)
+        self.weights = self.config.weights
         self.suggestion_generator = suggestion_generator or SuggestionGenerator()
 
     def score(self, password: str) -> StrengthResult:

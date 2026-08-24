@@ -13,7 +13,7 @@ from enum import Enum
 from pathlib import Path
 import re
 
-from src.loaders.env_loader import EnvLoader
+from ..config import StrengthConfig
 
 
 class DictionaryMatchType(str, Enum):
@@ -58,42 +58,6 @@ class DictionaryAnalysis:
         return len(self.matches)
 
 
-@dataclass(slots=True, frozen=True)
-class DictionaryConfig:
-    """
-    Configuration for the DictionaryAnalysis.
-    """
-    enabled: bool = True
-    check_common_passwords: bool = True
-    check_dictionary_words: bool = True
-    dictionary_file: str | None = None
-    common_password_file: str | None = None
-    min_word_length: int = 4
-    case_insensitive: bool = True
-    leet_normalization: bool = True
-
-    @classmethod
-    def load(cls, env_file: str = ".env") -> "DictionaryConfig":
-        """
-        Load configuration from environment variables.
-        :param env_file:
-        :return:
-        """
-        env = EnvLoader(env_file)
-        dictionary_file = env.get("STRENGTH_DICTIONARY_FILE", "")
-        common_password_file = env.get("STRENGTH_COMMON_PASSWORD_FILE", "")
-        return cls(
-            enabled=env.get_bool("STRENGTH_CHECK_DICTIONARY", True),
-            check_common_passwords=env.get_bool("STRENGTH_CHECK_COMMON_PASSWORDS", True),
-            check_dictionary_words=env.get_bool("STRENGTH_CHECK_DICTIONARY_WORDS", True),
-            dictionary_file=dictionary_file or None,
-            common_password_file=common_password_file or None,
-            min_word_length=env.get_int("STRENGTH_MIN_DICTIONARY_WORD_LENGTH", 4),
-            case_insensitive=env.get_bool("STRENGTH_DICTIONARY_CASE_INSENSITIVE", True),
-            leet_normalization=env.get_bool("STRENGTH_DICTIONARY_LEET_NORMALIZATION", True)
-        )
-
-
 class DictionaryAnalyzer:
     """
     Analyzer for detecting dictionary words and common passwords in a password.
@@ -126,8 +90,8 @@ class DictionaryAnalyzer:
         }
     )
 
-    def __init__(self, config: DictionaryConfig | None = None):
-        self.config = config or DictionaryConfig.load()
+    def __init__(self, config: StrengthConfig | None = None):
+        self.config = config or StrengthConfig.from_env()
         self._dictionary_words = set()
         self._common_passwords = set(self._DEFAULT_COMMON_PASSWORDS)
         self._load_external_sources()
@@ -143,7 +107,7 @@ class DictionaryAnalyzer:
         if not password:
             return result
 
-        if not self.config.enabled:
+        if not self.config.check_dictionary:
             return result
 
         normalized = self._normalize(password)
