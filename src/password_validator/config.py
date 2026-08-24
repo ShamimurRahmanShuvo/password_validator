@@ -7,9 +7,9 @@ Reads:
 Produces one immutable configuration object that can be used throughout the application.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from .constants import *
-from src.loaders.env_loader import EnvLoader
+from password_validator.loaders.env_loader import EnvLoader
 
 
 @dataclass(frozen=True, slots=True)

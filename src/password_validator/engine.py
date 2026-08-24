@@ -12,7 +12,7 @@ Responsibilities:
 from typing import Iterable
 from config import PasswordPolicy
 from models import ValidationResult, RuleResult
-from src.rules.base import ValidationRule
+from password_validator.rules import ValidationRule
 
 
 class ValidationEngine:

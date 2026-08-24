@@ -11,7 +11,7 @@ from .version import (
 )
 from .config import PasswordPolicy, default_policy
 from models import ValidationResult, ValidationError, RuleResult
-from src.rules import ValidationRule, RuleRegistry
+from password_validator.rules import ValidationRule, RuleRegistry
 from validator import PasswordValidator
 from engine import ValidationEngine
 

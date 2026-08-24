@@ -93,7 +93,7 @@ class EnvLoader:
         :param default: The default float value if the key is not found.
         :return: The float value of the environment variable or the default.
         """
-        value = self.get(key, default,)
+        value = self.get(key, default)
 
         try:
             return float(value)

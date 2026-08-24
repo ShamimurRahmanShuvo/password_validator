@@ -1,21 +1,21 @@
 """
-Digits rule for the password strength checker.
+Lowercase validation rule implementation.
 """
 from src.password_validator.config import PasswordPolicy
 from src.password_validator.enums import RuleType, ErrorCode
 from src.password_validator.models import RuleResult
-from src.rules.base import ValidationRule
+from password_validator.rules.base import ValidationRule
 
 
-class DigitsRule(ValidationRule):
+class LowercaseRule(ValidationRule):
     """
-    Validates that a password contains at least one digit.
+    Validates that a password contains at least one lowercase letter.
     """
-    name = RuleType.DIGIT
+    name = RuleType.LOWERCASE
 
     def validate(self, password: str, policy: PasswordPolicy) -> RuleResult:
         """
-        Validate that the given password contains at least one digit.
+        Validate that the given password contains at least one lowercase letter.
 
         Args:
             password (str): The password to validate.
@@ -24,24 +24,24 @@ class DigitsRule(ValidationRule):
         Returns:
             RuleResult: The result of the validation.
         """
-        if not policy.require_digit:
+        if not policy.require_lowercase:
             return RuleResult(
                 rule=self.name,
                 passed=True
             )
 
-        count = sum(c.isdigit() for c in password)
+        count = sum(c.islower() for c in password)
 
-        if count < policy.min_digit:
+        if count < policy.min_lowercase:
             return RuleResult(
                 rule=self.name,
                 passed=False,
-                error_code=ErrorCode.MISSING_DIGIT,
+                error_code=ErrorCode.MISSING_LOWERCASE,
                 message=(
-                    f"Password must contain at least {policy.min_digit} digit(s)."
+                    f"Password must contain at least {policy.min_lowercase} lowercase letter(s)."
                 ),
                 details={
-                    "expected": policy.min_digit,
+                    "expected": policy.min_lowercase,
                     "actual": count
                 },
             )
@@ -50,6 +50,6 @@ class DigitsRule(ValidationRule):
             rule=self.name,
             passed=True,
             details={
-                "digit_count": count
+                "lowercase_count": count
             },
         )

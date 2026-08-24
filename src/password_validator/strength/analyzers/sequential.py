@@ -7,7 +7,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
-from src.loaders.env_loader import EnvLoader
+from ..config import StrengthConfig
 
 
 class SequenceDirection(str, Enum):
@@ -57,36 +57,6 @@ class SequentialAnalysis:
         return len(self.patterns)
 
 
-@dataclass(slots=True, frozen=True)
-class SequentialConfig:
-    """
-    Configuration for sequential pattern detection in passwords.
-    """
-    enabled: bool = True
-    min_sequence_length: int = 4
-    check_digits: bool = True
-    check_lowercase: bool = True
-    check_uppercase: bool = True
-    check_mixed: bool = False
-
-    @classmethod
-    def load(cls, env_file: str = ".env") -> "SequentialConfig":
-        """
-        Load configuration from environment variables.
-        :param env_file:
-        :return:
-        """
-        env = EnvLoader(env_file)
-        return cls(
-            enabled=env.get_bool("STRENGTH_CHECK_SEQUENTIAL", True),
-            min_sequence_length=env.get_int("STRENGTH_MIN_SEQUENCE_LENGTH", 4),
-            check_digits=env.get_bool("STRENGTH_CHECK_DIGIT_SEQUENCES", True),
-            check_lowercase=env.get_bool("STRENGTH_CHECK_LOWERCASE_SEQUENCES", True),
-            check_uppercase=env.get_bool("STRENGTH_CHECK_UPPERCASE_SEQUENCES", True),
-            check_mixed=env.get_bool("STRENGTH_CHECK_MIXED_SEQUENCES", False),
-        )
-
-
 class SequentialAnalyzer:
     """
     Detects sequential character patterns in passwords, such as ascending or descending sequences of digits or letters.
@@ -96,8 +66,8 @@ class SequentialAnalyzer:
         if result.detected:
             print(f"Detected {pattern.direction} sequence: {pattern.value} at positions {pattern.start_position}-{pattern.end_position}")
     """
-    def __init__(self, config: SequentialConfig):
-        self.config = config or SequentialConfig.load()
+    def __init__(self, config: StrengthConfig):
+        self.config = config or StrengthConfig.from_env()
 
     def analyze(self, password: str) -> SequentialAnalysis:
         """

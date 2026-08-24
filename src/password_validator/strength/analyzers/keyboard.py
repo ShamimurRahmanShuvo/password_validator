@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
-from src.loaders.env_loader import EnvLoader
+from ..config import StrengthConfig
 
 
 class KeyboardPatternType(str, Enum):
@@ -53,36 +53,6 @@ class KeyboardAnalysis:
         return len(self.patterns)
 
 
-@dataclass(slots=True, frozen=True)
-class KeyboardConfig:
-    """
-    Configuration for keyboard pattern detection in passwords.
-    """
-    enabled: bool = True
-    min_pattern_length: int = 4
-    check_horizontal: bool = True
-    check_vertical: bool = True
-    check_diagonal: bool = True
-    check_number_row: bool = True
-    case_insensitive: bool = True
-
-    @classmethod
-    def load(cls, env_file:str = ".env") -> "KeyboardConfig":
-        """
-        Load configuration from environment variables.
-        """
-        env = EnvLoader(env_file)
-        return cls(
-            enabled=env.get_bool("STRENGTH_CHECK_KEYBOARD_PATTERNS", True),
-            min_pattern_length=env.get_int("STRENGTH_MIN_KEYBOARD_PATTERN_LENGTH", 4),
-            check_horizontal=env.get_bool("STRENGTH_CHECK_HORIZONTAL_KEYBOARD", True),
-            check_vertical=env.get_bool("STRENGTH_CHECK_VERTICAL_KEYBOARD", True),
-            check_diagonal=env.get_bool("STRENGTH_CHECK_DIAGONAL_KEYBOARD", True),
-            check_number_row=env.get_bool("STRENGTH_CHECK_NUMBER_ROW_KEYBOARD", True),
-            case_insensitive=env.get_bool("STRENGTH_KEYBOARD_CASE_INSENSITIVE", True),
-        )
-
-
 class KeyboardAnalyzer:
     """
     Analyzes passwords for keyboard patterns based on the provided configuration.
@@ -125,8 +95,8 @@ class KeyboardAnalyzer:
         "9opl",
     )
 
-    def __init__(self, config: KeyboardConfig | None = None):
-        self.config = config or KeyboardConfig.load()
+    def __init__(self, config: StrengthConfig | None = None):
+        self.config = config or StrengthConfig.from_env()
         self._patterns = self._build_patterns()
 
     def analyze(self, password: str) -> KeyboardAnalysis:

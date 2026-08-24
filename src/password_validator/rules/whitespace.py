@@ -1,21 +1,21 @@
 """
-Lowercase validation rule implementation.
+Whitespace rule for the linter.
 """
 from src.password_validator.config import PasswordPolicy
 from src.password_validator.enums import RuleType, ErrorCode
 from src.password_validator.models import RuleResult
-from src.rules.base import ValidationRule
+from password_validator.rules.base import ValidationRule
 
 
-class LowercaseRule(ValidationRule):
+class WhitespaceRule(ValidationRule):
     """
-    Validates that a password contains at least one lowercase letter.
+    Validates that a password does not contain whitespace characters.
     """
-    name = RuleType.LOWERCASE
+    name = RuleType.WHITESPACE
 
     def validate(self, password: str, policy: PasswordPolicy) -> RuleResult:
         """
-        Validate that the given password contains at least one lowercase letter.
+        Validate that the given password does not contain whitespace characters.
 
         Args:
             password (str): The password to validate.
@@ -24,25 +24,20 @@ class LowercaseRule(ValidationRule):
         Returns:
             RuleResult: The result of the validation.
         """
-        if not policy.require_lowercase:
+        if not policy.require_whitespace:
             return RuleResult(
                 rule=self.name,
                 passed=True
             )
 
-        count = sum(c.islower() for c in password)
-
-        if count < policy.min_lowercase:
+        if any(c.isspace() for c in password):
             return RuleResult(
                 rule=self.name,
                 passed=False,
-                error_code=ErrorCode.MISSING_LOWERCASE,
-                message=(
-                    f"Password must contain at least {policy.min_lowercase} lowercase letter(s)."
-                ),
+                error_code=ErrorCode.CONTAINS_SPACE,
+                message="Password must not contain whitespace characters.",
                 details={
-                    "expected": policy.min_lowercase,
-                    "actual": count
+                    "contains_whitespace": True
                 },
             )
 
@@ -50,6 +45,6 @@ class LowercaseRule(ValidationRule):
             rule=self.name,
             passed=True,
             details={
-                "lowercase_count": count
+                "contains_whitespace": False
             },
         )
