@@ -10,7 +10,6 @@ from .repeat import (
 from .sequential import (
     SequentialAnalyzer,
     SequentialAnalysis,
-    SequentialConfig,
     SequentialPattern,
     SequenceDirection,
     SequenceType
@@ -18,14 +17,12 @@ from .sequential import (
 from .keyboard import (
     KeyboardAnalyzer,
     KeyboardAnalysis,
-    KeyboardConfig,
     KeyboardPattern,
     KeyboardPatternType
 )
 from .dictionary import (
     DictionaryAnalyzer,
     DictionaryAnalysis,
-    DictionaryConfig,
     DictionaryMatch,
     DictionaryMatchType
 )
@@ -40,7 +37,6 @@ __all__ = [
     # Sequential
     "SequentialAnalyzer",
     "SequentialAnalysis",
-    "SequentialConfig",
     "SequentialPattern",
     "SequenceDirection",
     "SequenceType",
@@ -48,14 +44,12 @@ __all__ = [
     # Keyboard
     "KeyboardAnalyzer",
     "KeyboardAnalysis",
-    "KeyboardConfig",
     "KeyboardPattern",
     "KeyboardPatternType",
 
     # Dictionary
     "DictionaryAnalyzer",
     "DictionaryAnalysis",
-    "DictionaryConfig",
     "DictionaryMatch",
     "DictionaryMatchType"
     ]

@@ -1,55 +1,35 @@
 """
 Digits rule for the password strength checker.
 """
-from src.password_validator.config import PasswordPolicy
-from src.password_validator.enums import RuleType, ErrorCode
-from src.password_validator.models import RuleResult
-from password_validator.rules.base import ValidationRule
+from __future__ import annotations
+
+from .base import Rule, RuleResult
+from ..enums import ErrorCode
 
 
-class DigitsRule(ValidationRule):
+class DigitsRule(Rule):
     """
-    Validates that a password contains at least one digit.
+    Validates that a password contains at least one uppercase letter.
     """
-    name = RuleType.DIGIT
+    name = "digits"
 
-    def validate(self, password: str, policy: PasswordPolicy) -> RuleResult:
+    def validate(self, password: str) -> RuleResult:
         """
         Validate that the given password contains at least one digit.
 
         Args:
             password (str): The password to validate.
-            policy (PasswordPolicy): The password policy to use for validation.
 
         Returns:
             RuleResult: The result of the validation.
         """
-        if not policy.require_digit:
-            return RuleResult(
-                rule=self.name,
-                passed=True
+        if any(character.isdigit() for character in password):
+            return self._passed(
+                message="Password contains digit"
             )
 
-        count = sum(c.isdigit() for c in password)
-
-        if count < policy.min_digit:
-            return RuleResult(
-                rule=self.name,
-                passed=False,
-                error_code=ErrorCode.MISSING_DIGIT,
-                message=(
-                    f"Password must contain at least {policy.min_digit} digit(s)."
-                ),
-                details={
-                    "expected": policy.min_digit,
-                    "actual": count
-                },
-            )
-
-        return RuleResult(
-            rule=self.name,
-            passed=True,
-            details={
-                "digit_count": count
-            },
+        return self._failed(
+            message="Password must contain at least one digit",
+            code=ErrorCode.MISSING_DIGIT
         )
+

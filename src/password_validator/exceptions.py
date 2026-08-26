@@ -6,12 +6,12 @@ All exceptions used in the password_validator package are defined here.
 """
 
 
-class PasswordValidatorException(Exception):
+class PasswordValidatorError(Exception):
     """Raised when a password fails validation."""
     pass
 
 
-class ConfigurationError(PasswordValidatorException):
+class ConfigurationError(PasswordValidatorError):
     """Raised when there is an issue with the configuration."""
     pass
 
@@ -26,6 +26,25 @@ class RuleConfigurationError(ConfigurationError):
     pass
 
 
-class InvalidConfigurationValue(ConfigurationError):
+class InvalidConfigurationValue(PasswordValidatorError):
     """Raised when a configuration value is invalid."""
-    pass
+    """
+        Raised when an environment/configuration value
+        has an invalid type or format.
+        """
+
+    def __init__(
+            self,
+            key: str,
+            value: object,
+            expected: str,
+    ) -> None:
+        super().__init__(
+            f"Invalid configuration value for "
+            f"'{key}': {value!r}. "
+            f"Expected {expected}."
+        )
+
+        self.key = key
+        self.value = value
+        self.expected = expected

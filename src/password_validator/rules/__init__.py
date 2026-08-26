@@ -2,24 +2,23 @@
 Password validation rules package.
 """
 
-from base import ValidationRule
-from registry import RuleRegistry
+from .base import Rule, RuleResult
+from .registry import RuleRegistry
 
-from length import LengthRule
-from uppercase import UppercaseRule
-from lowercase import LowercaseRule
-from special import SpecialCharacterRule
-from digits import DigitsRule
-from whitespace import WhitespaceRule
+from .length import LengthRule
+from .uppercase import UppercaseRule
+from .lowercase import LowercaseRule
+from .special import SpecialCharacterRule
+from .digits import DigitsRule
 
 
 __all__ = [
-    "ValidationRule",
+    "Rule",
+    "RuleResult",
     "RuleRegistry",
     "LengthRule",
     "UppercaseRule",
     "LowercaseRule",
     "SpecialCharacterRule",
     "DigitsRule",
-    "WhitespaceRule",
 ]

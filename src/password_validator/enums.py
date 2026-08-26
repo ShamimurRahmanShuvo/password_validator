@@ -7,7 +7,7 @@ Enums used in the password_validator package are defined here.
 from enum import Enum
 
 
-class RuleType(str, Enum):
+class Rule(str, Enum):
     """
     Supported validation rule types for password validation.
     """

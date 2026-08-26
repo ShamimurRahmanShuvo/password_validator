@@ -1,55 +1,34 @@
 """
 Lowercase validation rule implementation.
 """
-from src.password_validator.config import PasswordPolicy
-from src.password_validator.enums import RuleType, ErrorCode
-from src.password_validator.models import RuleResult
-from password_validator.rules.base import ValidationRule
+from __future__ import annotations
+
+from .base import Rule, RuleResult
+from ..enums import ErrorCode
 
 
-class LowercaseRule(ValidationRule):
+class LowercaseRule(Rule):
     """
     Validates that a password contains at least one lowercase letter.
     """
-    name = RuleType.LOWERCASE
+    name = "lowercase"
 
-    def validate(self, password: str, policy: PasswordPolicy) -> RuleResult:
+    def validate(self, password: str) -> RuleResult:
         """
-        Validate that the given password contains at least one lowercase letter.
+        Validate that the given password contains at least one uppercase letter.
 
         Args:
             password (str): The password to validate.
-            policy (PasswordPolicy): The password policy to use for validation.
 
         Returns:
             RuleResult: The result of the validation.
         """
-        if not policy.require_lowercase:
-            return RuleResult(
-                rule=self.name,
-                passed=True
+        if any(character.islower() for character in password):
+            return self._passed(
+                message="Password contains lowercase character"
             )
 
-        count = sum(c.islower() for c in password)
-
-        if count < policy.min_lowercase:
-            return RuleResult(
-                rule=self.name,
-                passed=False,
-                error_code=ErrorCode.MISSING_LOWERCASE,
-                message=(
-                    f"Password must contain at least {policy.min_lowercase} lowercase letter(s)."
-                ),
-                details={
-                    "expected": policy.min_lowercase,
-                    "actual": count
-                },
-            )
-
-        return RuleResult(
-            rule=self.name,
-            passed=True,
-            details={
-                "lowercase_count": count
-            },
+        return self._failed(
+            message="Password must contain at least one lowercase character",
+            code=ErrorCode.MISSING_LOWERCASE
         )

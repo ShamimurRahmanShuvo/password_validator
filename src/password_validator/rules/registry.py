@@ -2,13 +2,12 @@
 Rule registry module for managing and retrieving rules in the system.
 """
 from typing import List
-from base import ValidationRule
-from length import LengthRule
-from uppercase import UppercaseRule
-from lowercase import LowercaseRule
-from digits import DigitsRule
-from special import SpecialCharacterRule
-from whitespace import WhitespaceRule
+from .base import Rule
+from .length import LengthRule
+from .uppercase import UppercaseRule
+from .lowercase import LowercaseRule
+from .digits import DigitsRule
+from .special import SpecialCharacterRule
 
 
 class RuleRegistry:
@@ -16,9 +15,9 @@ class RuleRegistry:
     Stores and manages the registered rules in the system.
     """
     def __init__(self):
-        self._rules: List[ValidationRule] = []
+        self._rules: List[Rule] = []
 
-    def register(self, rule: ValidationRule):
+    def register(self, rule: Rule):
         """
         Registers a new rule in the registry.
 
@@ -34,7 +33,7 @@ class RuleRegistry:
         """
         self._rules = [rule for rule in self._rules if rule.name != rule_type]
 
-    def get_rules(self) -> List[ValidationRule]:
+    def get_rules(self) -> List[Rule]:
         """
         Retrieves all registered rules.
 
@@ -63,6 +62,5 @@ def create_default_registry():
     registry.register(LowercaseRule())
     registry.register(DigitsRule())
     registry.register(SpecialCharacterRule())
-    registry.register(WhitespaceRule())
 
     return registry
