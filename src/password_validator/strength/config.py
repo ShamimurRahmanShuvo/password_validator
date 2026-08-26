@@ -4,9 +4,9 @@ All strength related configuration can be controlled through environment variabl
 Python objects can still be supplied explicitly for testing or advanced application-level configuration.
 """
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-from src.password_validator.loaders.env_loader import EnvLoader
+from ..loaders.env_loader import EnvLoader
 from .weights import StrengthWeights
 
 
@@ -41,7 +41,7 @@ class StrengthConfig:
     dictionary_leet_normalization: bool = True
 
     # Scoring weights
-    weights: StrengthWeights = StrengthWeights()
+    weights: StrengthWeights = field(default_factory=StrengthWeights)
 
     @classmethod
     def from_env(cls, env_file: str = ".env"):
@@ -74,7 +74,7 @@ class StrengthConfig:
         )
 
     @classmethod
-    def defaults(cls):
+    def defaults(cls) -> "StrengthConfig":
         """
         Return the package defaults.
         Useful for applications that don't use .env.

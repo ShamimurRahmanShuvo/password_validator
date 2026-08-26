@@ -1,7 +1,8 @@
 from .analyzer import StrengthAnalysis, StrengthAnalyzer
-from scorer import PasswordStrengthScorer
+from .config import StrengthConfig
+from .scorer import PasswordStrengthScorer, StrengthResult
 from .suggestions import PasswordSuggestion, SuggestionGenerator, SuggestionResult
-from weights import StrengthWeights, default_strength_weights
+from .weights import StrengthWeights
 
 
 __all__ = [
@@ -12,5 +13,4 @@ __all__ = [
     "SuggestionGenerator",
     "SuggestionResult",
     "StrengthWeights",
-    "default_strength_weights",
 ]

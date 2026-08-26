@@ -9,29 +9,49 @@ from .version import (
     __author__,
     __description__
 )
-from .config import PasswordPolicy, default_policy
-from models import ValidationResult, ValidationError, RuleResult
-from password_validator.rules import ValidationRule, RuleRegistry
-from validator import PasswordValidator
-from engine import ValidationEngine
-
+from .config.settings import PasswordRuleConfig, Settings
+from .engine.validator import PasswordValidator, ValidationResult
+from .rules.base import Rule, RuleResult
+from .rules.digits import DigitsRule
+from .rules.length import LengthRule
+from .rules.lowercase import LowercaseRule
+from .rules.special import SpecialCharacterRule
+from .rules.uppercase import UppercaseRule
+from .strength.config import StrengthConfig
+from .strength.scorer import PasswordStrengthScorer, StrengthResult
+from .strength.weights import StrengthWeights
 
 # Package metadata
 VERSION = __version__
 
 __all__ = [
+    # Package Metadata
     "__version__",
     "__title__",
     "__author__",
     "__description__",
     "VERSION",
-    "PasswordPolicy",
-    "default_policy",
-    "ValidationResult",
-    "ValidationError",
-    "RuleResult",
-    "ValidationRule",
-    "RuleRegistry",
+
+    # Main API
     "PasswordValidator",
-    "ValidationEngine"
+    "ValidationResult",
+    "PasswordStrengthScorer",
+    "StrengthResult",
+
+    # Configuration
+    "Settings",
+    "PasswordRuleConfig",
+    "StrengthConfig",
+    "StrengthWeights",
+
+    # Rule framework
+    "Rule",
+    "RuleResult",
+
+    # Built-in rules
+    "LengthRule",
+    "UppercaseRule",
+    "LowercaseRule",
+    "DigitsRule",
+    "SpecialCharacterRule"
 ]

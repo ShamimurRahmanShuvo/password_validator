@@ -7,7 +7,7 @@ Contains data models.
 """
 from dataclasses import dataclass, field
 from typing import Any, List, Optional
-from enums import RuleType, StrengthLevel, ErrorCode
+from enums import Rule, StrengthLevel, ErrorCode
 
 
 @dataclass(slots=True)
@@ -15,7 +15,7 @@ class RuleResult:
     """
     Represents the result of a single password validation rule.
     """
-    rule: RuleType
+    rule: Rule
     passed: bool
     error_code: Optional[ErrorCode] = None
     message: Optional[str] = None
@@ -27,7 +27,7 @@ class ValidationError:
     """
     Represents a validation error for a password.
     """
-    rule: RuleType
+    rule: Rule
     code: ErrorCode
     message: str
 
@@ -40,12 +40,9 @@ class ValidationResult:
     valid: bool
     errors: List[ValidationError] = field(default_factory=list)
 
-    passed_rules: List[RuleType] = field(default_factory=list)
-    failed_rules: List[RuleType] = field(default_factory=list)
-
-    score: int = 0
-
-    strength: Optional[StrengthLevel] = None
+    passed: List[Rule] = field(default_factory=list)
+    failed: List[Rule] = field(default_factory=list)
+    rule_result: List[RuleResult] = field(default_factory=list)
 
     def add_result(self, result: RuleResult):
         """

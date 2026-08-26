@@ -1,11 +1,10 @@
-from src.password_validator.config import PasswordPolicy
+from password_validator import PasswordValidator
 
+validator = PasswordValidator()
 
-policy = PasswordPolicy.load()
+result = validator.validate(
+    "MyPassword123!"
+)
 
-
-print(policy.min_length)
-
-print(policy.require_special)
-
-print(policy.min_digit)
+if result.is_valid:
+    print("Password is valid")

@@ -1,64 +1,43 @@
 """
 Length validation rule for password validation.
 """
-from src.password_validator.config import PasswordPolicy
-from src.password_validator.enums import RuleType, ErrorCode
-from src.password_validator.models import RuleResult
-from password_validator.rules.base import ValidationRule
+from __future__ import annotations
+
+from ..enums import ErrorCode
+from .base import Rule, RuleResult
 
 
-class LengthRule(ValidationRule):
+class LengthRule(Rule):
     """
     Validates the length of a password against the specified policy.
     """
-    name = RuleType.LENGTH
+    name = "length"
 
-    def validate(self, password: str, policy: PasswordPolicy) -> RuleResult:
-        """
-        Validate the length of the given password against the policy.
+    def __init__(self, min_length: int, max_length: int) -> None:
+        self.min_length = min_length
+        self.max_length = max_length
 
-        Args:
-            password (str): The password to validate.
-            policy (PasswordPolicy): The password policy to use for validation.
+    def validate(self, password: str) -> RuleResult:
+        length = len(password)
 
-        Returns:
-            RuleResult: The result of the validation.
-        """
-        min_length = policy.min_length
-        max_length = policy.max_length
-
-        if len(password) < min_length:
-            return RuleResult(
-                rule=self.name,
-                passed=False,
-                error_code=ErrorCode.TOO_SHORT,
-                message=(
-                    f"Password must be at least {min_length} characters long."
-                ),
-                details={
-                    "expected": policy.min_length,
-                    "actual": len(password)
-                },
+        if length < self.min_length:
+            return self._failed(
+                message=f"Password must contain at lease {self.min_length} characters",
+                code=ErrorCode.TOO_SHORT,
+                metadata={"length": length,
+                          "minimum": self.min_length}
             )
 
-        if len(password) > max_length:
-            return RuleResult(
-                rule=self.name,
-                passed=False,
-                error_code=ErrorCode.TOO_LONG,
-                message=(
-                    f"Password must be no more than {max_length} characters long."
-                ),
-                details={
-                    "expected": policy.max_length,
-                    "actual": len(password)
-                },
+        if length > self.max_length:
+            return self._failed(
+                message=f"Password must not exceed {self.max_length} characters",
+                code=ErrorCode.TOO_LONG,
+                metadata={"length": length,
+                          "maximum": self.max_length}
             )
 
-        return RuleResult(
-            rule=self.name,
-            passed=True,
-            details={
-                "length": len(password)
-            }
+        return self._passed(
+            message="Password length is valid",
+            metadata={"length": length}
         )
+

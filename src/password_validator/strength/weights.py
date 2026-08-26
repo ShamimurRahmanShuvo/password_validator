@@ -4,7 +4,7 @@ All values are loaded from the environment to allow for easy configuration witho
 """
 from __future__ import annotations
 from dataclasses import dataclass
-from ..loaders import EnvLoader
+from ..loaders.env_loader import EnvLoader
 
 
 @dataclass(slots=True, frozen=True)
@@ -53,5 +53,12 @@ class StrengthWeights:
             high_entropy=env.get_float("STRENGTH_WEIGHT_HIGH_ENTROPY", 5.0)
         )
 
+    @classmethod
+    def defaults(cls) -> "StrengthWeights":
+        """
+        Return the built-in default weights.
 
-default_strength_weights = StrengthWeights.load()
+        No environment variables are loaded.
+        """
+
+        return cls()
