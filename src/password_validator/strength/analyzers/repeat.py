@@ -61,7 +61,7 @@ class RepeatAnalysis:
     consecutive_detected: bool = False
     repeated_group_detected: bool = False
     frequency_detected: bool = False
-    severity: float = 0.0
+    overall_severity: float = 0.0
     penalty_factor: float = 0.0
 
     @property

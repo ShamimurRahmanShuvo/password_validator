@@ -18,7 +18,7 @@ class EnvLoader:
 
         :param env_file: Path to the .env file. Defaults to ".env".
         """
-        self._values = dict[str, str] = {}
+        self._values: dict[str, str] = {}
 
         if env_file:
             self._load_env_file(env_file)

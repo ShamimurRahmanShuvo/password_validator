@@ -190,7 +190,14 @@ class SuggestionGenerator:
         has_digit = any(character.isdigit() for character in password)
         has_special = any(character.isalnum() for character in password)
 
-        classes = sum(has_lower, has_upper, has_digit, has_special)
+        classes = sum(
+            (
+                has_lower,
+                has_upper,
+                has_digit,
+                has_special
+            )
+        )
 
         if classes >= 3:
             return

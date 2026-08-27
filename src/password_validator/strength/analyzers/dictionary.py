@@ -107,7 +107,7 @@ class DictionaryAnalyzer:
         if not password:
             return result
 
-        if not self.config.check_dictionary:
+        if not self.config.check_dictionary_words:
             return result
 
         normalized = self._normalize(password)
@@ -228,7 +228,7 @@ class DictionaryAnalyzer:
 
         # Embedded match
         for common in self._common_passwords:
-            if len(common) < self.config.min_word_length:
+            if len(common) < self.config.min_dictionary_word_length:
                 continue
 
             index = normalized.find(common)

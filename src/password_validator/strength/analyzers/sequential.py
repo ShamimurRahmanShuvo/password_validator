@@ -50,6 +50,7 @@ class SequentialAnalysis:
     descending_detected: bool = False
     severity: float = 0.0
     penalty_factor: float = 0.0
+    message: str = ""
 
     @property
     def pattern_count(self) -> int:

@@ -46,6 +46,7 @@ class KeyboardAnalysis:
     number_row_detected: bool = False
     severity: float = 0.0
     penalty_factor: float = 0.0
+    message: str = ""
 
     @property
     def pattern_count(self) -> int:
@@ -338,7 +339,7 @@ class KeyboardAnalyzer:
         return min(1.0, max(0.0, severity))
 
     @staticmethod
-    def _finalize(self, result: KeyboardAnalysis) -> None:
+    def _finalize(result: KeyboardAnalysis) -> None:
         """
         Calculate aggregate severity and finalize the analysis result.
         :param result:
