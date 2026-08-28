@@ -85,6 +85,15 @@ class PasswordRuleConfig:
         if self.require_special and not self.special_characters:
             raise ValueError("PASSWORD_SPECIAL_CHARACTERS cannot be empty when PASSWORD_REQUIRE_SPECIAL=true")
 
+    @classmethod
+    def defaults(cls) -> "PasswordRuleConfig":
+        """
+        Return the package defaults.
+        Useful for applications that don't use .env.
+        :return:
+        """
+        return cls()
+
 
 @dataclass(slots=True, frozen=True)
 class Settings:
