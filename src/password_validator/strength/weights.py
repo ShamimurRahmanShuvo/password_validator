@@ -3,6 +3,7 @@ Password strength scoring weights.
 All values are loaded from the environment to allow for easy configuration without code changes.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass
 from ..loaders.env_loader import EnvLoader
 
@@ -13,7 +14,7 @@ class StrengthWeights:
     Scoring weights.
     Penalty values represent the maximum number of points that can be deducted when the corresponding weakness
     has maximum severity.
-    Bonus valus represent positive score contributions.
+    Bonus values represent positive score contributions.
     """
     # --------------------------------------------------
     # Penalties

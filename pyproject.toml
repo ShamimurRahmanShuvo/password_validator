@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "password-validator"
 version = "1.0.0"
-description = "Highly configurable password validation library"
+description = "Highly configurable password validation and strength analysis package"
 readme = "README.md"
 license = { file= "LICENSE" }
 
