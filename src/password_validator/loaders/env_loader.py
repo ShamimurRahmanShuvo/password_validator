@@ -110,7 +110,7 @@ class EnvLoader:
         try:
             return int(value)
         except ValueError:
-            raise InvalidConfigurationValue(f"{key}: {value} must be an integer")
+            raise InvalidConfigurationValue(key, value, "integer") from None
 
     def get_list(self, key: str, default: list[str] = None, delimiter: str = ',') -> list[str]:
         """
