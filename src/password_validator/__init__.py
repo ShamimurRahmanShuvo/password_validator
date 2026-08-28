@@ -10,6 +10,7 @@ from .version import (
     __description__
 )
 from .engine.validator import PasswordValidator, ValidationResult
+from .strength.scorer import PasswordStrengthScorer
 
 # Package metadata
 VERSION = __version__
@@ -25,4 +26,5 @@ __all__ = [
     # Main API
     "PasswordValidator",
     "ValidationResult",
+    "PasswordStrengthScorer",
 ]
