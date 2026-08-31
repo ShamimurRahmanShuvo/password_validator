@@ -124,3 +124,30 @@ class TestEnvLoader:
         loader = EnvLoader()
 
         assert loader.get_bool("TEST_BOOLEAN") is False
+
+    def test_get_float_returns_float(self, monkeypatch):
+        monkeypatch.setenv("TEST_MIN_LENGTH", "12.0")
+        loader = EnvLoader()
+        result = loader.get_float("TEST_MIN_LENGTH")
+
+        assert result == 12.0
+        assert isinstance(result, float)
+
+    def test_get_float_returns_default(self):
+        loader = EnvLoader()
+        result = loader.get_float("MISSING_MIN_LENGTH", default=8.0)
+
+        assert result == 8.0
+
+    def test_get_float_rejects_invalid_value(self, monkeypatch):
+        monkeypatch.setenv("TEST_MIN_LENGTH", "abc")
+        loader = EnvLoader()
+
+        with pytest.raises(InvalidConfigurationValue) as exc_info:
+            loader.get_float("TEST_MIN_LENGTH")
+
+        error = exc_info.value
+
+        assert error.key == "TEST_MIN_LENGTH"
+        assert error.value == "abc"
+        assert error.expected == "float"

@@ -14,10 +14,10 @@ class RuleRegistry:
     """
     Stores and manages the registered rules in the system.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self._rules: List[Rule] = []
 
-    def register(self, rule: Rule):
+    def register(self, rule: Rule) -> None:
         """
         Registers a new rule in the registry.
 
@@ -26,7 +26,7 @@ class RuleRegistry:
         """
         self._rules.append(rule)
 
-    def unregister(self, rule_type):
+    def unregister(self, rule_type: str) -> None:
         """
         Unregisters a rule from the registry based on its type.
         :param rule_type: The type of the rule to unregister.
@@ -49,18 +49,33 @@ class RuleRegistry:
         self._rules.clear()
 
 
-def create_default_registry():
+def create_default_registry(config) -> RuleRegistry:
     """
-    Creates a default rule registry with standard password validation rules.
+    Create a registry containing the standard password rules.
+
+    The rule configuration is supplied by PasswordRuleConfig,
+    which can ultimately be populated from environment variables.
+
+    Args:
+        config: PasswordRuleConfig instance.
 
     Returns:
-        RuleRegistry: A registry populated with default rules.
+        RuleRegistry: Configured default rule registry.
     """
     registry = RuleRegistry()
-    registry.register(LengthRule())
+    registry.register(
+        LengthRule(
+            min_length=config.min_length,
+            max_length=config.max_length
+        )
+    )
     registry.register(UppercaseRule())
     registry.register(LowercaseRule())
     registry.register(DigitsRule())
-    registry.register(SpecialCharacterRule())
+    registry.register(
+        SpecialCharacterRule(
+            special_characters=config.special_characters
+        )
+    )
 
     return registry

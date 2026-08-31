@@ -146,4 +146,4 @@ class EnvLoader:
         try:
             return float(value)
         except (TypeError, ValueError) as exc:
-            raise InvalidConfigurationValue(f"{key}: {value} must be a valid float") from exc
+            raise InvalidConfigurationValue(key, value, "float") from None
