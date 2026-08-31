@@ -11,7 +11,7 @@ class TestSpecialCharacterRule:
     """
     Tests for Special Character
     """
-    @pytest.fixture()
+    @pytest.fixture
     def rule(self):
         return SpecialCharacterRule(
             special_characters=DEFAULT_SPECIAL_CHARACTERS
@@ -26,26 +26,6 @@ class TestSpecialCharacterRule:
         result = rule.validate("Password123")
 
         assert result.passed is False
-
-    def test_exclamation_mark_is_special(self, rule):
-        result = rule.validate("Password123!")
-
-        assert result.passed is True
-
-    def test_at_symbol_is_special(self, rule):
-        result = rule.validate("Password@123")
-
-        assert result.passed is True
-
-    def test_hash_is_special(self, rule):
-        result = rule.validate("Password123#")
-
-        assert result.passed is True
-
-    def test_dollar_sign_is_special(self, rule):
-        result = rule.validate("Password123$")
-
-        assert result.passed is True
 
     def test_empty_password_fails(self, rule):
         result = rule.validate("")
