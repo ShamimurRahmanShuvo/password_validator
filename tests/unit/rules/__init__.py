@@ -1,0 +1,3 @@
+"""
+Password rule unit tests
+"""
