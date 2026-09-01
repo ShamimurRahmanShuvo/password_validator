@@ -112,6 +112,9 @@ class RepeatAnalyzer:
         if not self.config.enabled:
             return analysis
 
+        if not self.config.check_repeated_characters:
+            return analysis
+
         if self.config.check_consecutive:
             self._detect_consecutive(password, analysis)
 
@@ -134,11 +137,11 @@ class RepeatAnalyzer:
         """
         max_repeat = self.config.max_consecutive_repeat
 
-        if max_repeat > 1:
-            return
+        if max_repeat < 1:
+            max_repeat = 1
 
         pattern = re.compile(
-            rf"(.)\1{{{max_repeat}, }}"
+            rf"(.)\1{{{max_repeat},}}"
         )
         for match in pattern.finditer(password):
             value = match.group(0)
@@ -203,7 +206,7 @@ class RepeatAnalyzer:
                             )
                         )
 
-                        analysis.repeated_groups_detected = True
+                        analysis.repeated_group_detected = True
                         break
 
     def _detect_character_frequency(self, password: str, analysis: RepeatAnalysis) -> None:
@@ -251,7 +254,7 @@ class RepeatAnalyzer:
                     ),
                 )
             )
-            analysis.character_frequency_detected = True
+            analysis.frequency_detected = True
 
     def _calculate_consecutive_severity(self, count: int) -> float:
         """
@@ -303,6 +306,6 @@ class RepeatAnalyzer:
             analysis.penalty_factor = 0.0
             return
 
-        analysis.severity = min(1.0, max(pattern.severity for pattern in analysis.patterns),)
+        analysis.overall_severity = min(1.0, max(pattern.severity for pattern in analysis.patterns),)
 
-        analysis.penalty_factor = analysis.severity
+        analysis.penalty_factor = analysis.overall_severity
