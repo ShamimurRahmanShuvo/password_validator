@@ -160,9 +160,6 @@ class DictionaryAnalyzer:
                 if word.startswith("#"):
                     continue
 
-                if len(word) < self.config.min_word_length:
-                    continue
-
                 if self.config.case_insensitive:
                     word = word.lower()
 
@@ -273,9 +270,6 @@ class DictionaryAnalyzer:
             return
 
         for word in self._dictionary_words:
-            if len(word) < self.config.min_word_length:
-                continue
-
             index = normalized.find(word)
 
             if index == -1:
