@@ -63,7 +63,6 @@ class KeyboardAnalyzer:
     """
     # Horizontal keyboard rows.
     _HORIZONTAL_PATTERNS = (
-        "1234567890",
         "qwertyuiop",
         "asdfghjkl",
         "zxcvbnm",
@@ -94,6 +93,10 @@ class KeyboardAnalyzer:
         "7uij",
         "8iok",
         "9opl",
+    )
+
+    _NUMBER_ROW_PATTERNS = (
+        "1234567890",
     )
 
     def __init__(self, config: StrengthConfig | None = None):
@@ -141,7 +144,7 @@ class KeyboardAnalyzer:
             patterns[KeyboardPatternType.DIAGONAL] = self._DIAGONAL_PATTERNS
 
         if self.config.check_number_row:
-            patterns[KeyboardPatternType.NUMBER_ROW] = (self._HORIZONTAL_PATTERNS[:1])
+            patterns[KeyboardPatternType.NUMBER_ROW] = self._NUMBER_ROW_PATTERNS
 
         return patterns
 
@@ -153,10 +156,10 @@ class KeyboardAnalyzer:
         :param result:
         :return:
         """
-        if not self.config.check_horizontal:
-            return
+        patterns = self._patterns.get(KeyboardPatternType.HORIZONTAL, ())
 
-        patterns = self._HORIZONTAL_PATTERNS
+        if not patterns:
+            return
 
         self._scan_patterns(
             original=original,
@@ -174,10 +177,9 @@ class KeyboardAnalyzer:
         :param result:
         :return:
         """
-        if not self.config.check_vertical:
+        patterns = self._patterns.get(KeyboardPatternType.VERTICAL, ())
+        if not patterns:
             return
-
-        patterns = self._VERTICAL_PATTERNS
 
         self._scan_patterns(
             original=original,
@@ -195,10 +197,9 @@ class KeyboardAnalyzer:
         :param result:
         :return:
         """
-        if not self.config.check_diagonal:
+        patterns = self._patterns.get(KeyboardPatternType.DIAGONAL, ())
+        if not patterns:
             return
-
-        patterns = self._DIAGONAL_PATTERNS
 
         self._scan_patterns(
             original=original,
@@ -216,7 +217,8 @@ class KeyboardAnalyzer:
         :param result:
         :return:
         """
-        if not self.config.check_number_row:
+        patterns = self._patterns.get(KeyboardPatternType.NUMBER_ROW, ())
+        if not patterns:
             return
 
         self._scan_patterns(
@@ -230,42 +232,60 @@ class KeyboardAnalyzer:
     def _scan_patterns(self, original: str, normalized: str, patterns: tuple[str, ...],
                        pattern_type: KeyboardPatternType, result: KeyboardAnalysis) -> None:
         """
-        Scan the password for keyboard patterns.
-        :param original:
-        :param normalized:
-        :param patterns:
-        :param pattern_type:
-        :param result:
-        :return:
+        Detect the longest keyboard sequence of at least min_pattern_length.
+        Checks both forward and reverse directions.
         """
         minimum = max(self.config.min_pattern_length, 2)
 
         for pattern in patterns:
-            candidates = [pattern, pattern[::-1]]  # Check both forward and reverse patterns
+            normalized_pattern = (
+                pattern.lower()
+                if self.config.case_insensitive
+                else pattern
+            )
 
-            for candidate in candidates:
+            candidates = (
+                (normalized_pattern, False),
+                (normalized_pattern[::-1], True),
+            )
+
+            for candidate, reversed_pattern in candidates:
                 if len(candidate) < minimum:
                     continue
 
-                start = 0
+                found = False
 
-                while True:
-                    index = normalized.find(candidate, start)
-                    if index == -1:
+                for length in range(len(candidate), minimum - 1, -1):
+                    for pattern_start in range(
+                        len(candidate) - length + 1
+                    ):
+                        sub_pattern = candidate[
+                            pattern_start:pattern_start + length
+                        ]
+
+                        index = normalized.find(sub_pattern)
+
+                        if index == -1:
+                            continue
+
+                        end = index + length
+
+                        self._add_pattern(
+                            original=original,
+                            normalized=normalized,
+                            value=sub_pattern,
+                            pattern_type=pattern_type,
+                            start=index,
+                            end=end,
+                            reversed_pattern=reversed_pattern,
+                            result=result,
+                        )
+
+                        found = True
                         break
 
-                    end = index + len(candidate)
-                    self._add_pattern(
-                        original=original,
-                        normalized=normalized,
-                        value=candidate,
-                        pattern_type=pattern_type,
-                        start=index,
-                        end=end,
-                        reversed_pattern=(candidate != pattern),
-                        result=result,
-                    )
-                    start = index + 1
+                    if found:
+                        break
 
     def _add_pattern(self, original: str, normalized: str, value: str, pattern_type: KeyboardPatternType,
                      start: int, end: int, reversed_pattern: bool, result: KeyboardAnalysis) -> None:

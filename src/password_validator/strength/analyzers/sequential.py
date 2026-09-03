@@ -67,7 +67,7 @@ class SequentialAnalyzer:
         if result.detected:
             print(f"Detected {pattern.direction} sequence: {pattern.value} at positions {pattern.start_position}-{pattern.end_position}")
     """
-    def __init__(self, config: StrengthConfig):
+    def __init__(self, config: StrengthConfig | None = None) -> None:
         self.config = config or StrengthConfig.from_env()
 
     def analyze(self, password: str) -> SequentialAnalysis:
@@ -82,6 +82,9 @@ class SequentialAnalyzer:
             return result  # Return empty result for empty password
 
         if not self.config.enabled:
+            return result
+
+        if not self.config.check_sequential_patterns:
             return result
 
         self._scan(password, result)
