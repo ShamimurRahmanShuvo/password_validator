@@ -24,7 +24,7 @@ class TestRepeatAnalysis:
         assert result.consecutive_detected is False
         assert result.repeated_group_detected is False
         assert result.frequency_detected is False
-        assert result.overall_severity == 0.0
+        assert result.severity == 0.0
         assert result.penalty_factor == 0.0
         assert result.pattern_count == 0
 
@@ -143,7 +143,7 @@ class TestRepeatAnalyzer:
         assert result.consecutive_detected is False
         assert result.repeated_group_detected is False
         assert result.frequency_detected is False
-        assert result.overall_severity == 0.0
+        assert result.severity == 0.0
         assert result.penalty_factor == 0.0
 
     def test_normal_password_has_no_repeat_pattern(self, analyzer):
@@ -155,7 +155,7 @@ class TestRepeatAnalyzer:
         assert result.consecutive_detected is False
         assert result.repeated_group_detected is False
         assert result.frequency_detected is False
-        assert result.overall_severity == 0.0
+        assert result.severity == 0.0
         assert result.penalty_factor == 0.0
 
     def test_consecutive_pattern_is_detected(self, analyzer):
@@ -259,20 +259,20 @@ class TestRepeatAnalyzer:
         for pattern in frequency_patterns:
             assert 0.0 <= pattern.severity <= 1.0
 
-    def test_overall_severity_is_between_zero_and_one(self, analyzer):
+    def test_severity_is_between_zero_and_one(self, analyzer):
         result = analyzer.analyze("Password111!")
 
-        assert 0.0 <= result.overall_severity <= 1.0
+        assert 0.0 <= result.severity <= 1.0
 
     def test_penalty_factor_is_between_zero_and_one(self, analyzer):
         result = analyzer.analyze("Password111!")
 
         assert 0.0 <= result.penalty_factor <= 1.0
 
-    def test_penalty_factor_matches_overall_severity(self, analyzer):
+    def test_penalty_factor_matches_severity(self, analyzer):
         result = analyzer.analyze("Password111!")
 
-        assert result.penalty_factor == result.overall_severity
+        assert result.penalty_factor == result.severity
 
     def test_pattern_count_matches_patterns(self, analyzer):
         result = analyzer.analyze("Password111!")
@@ -295,7 +295,7 @@ class TestRepeatAnalyzerConfiguration:
         assert result.consecutive_detected is False
         assert result.repeated_group_detected is False
         assert result.frequency_detected is False
-        assert result.overall_severity == 0.0
+        assert result.severity == 0.0
         assert result.penalty_factor == 0.0
 
     def test_different_parameters_can_be_disabled(self):

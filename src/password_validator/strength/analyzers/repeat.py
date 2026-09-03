@@ -61,7 +61,7 @@ class RepeatAnalysis:
     consecutive_detected: bool = False
     repeated_group_detected: bool = False
     frequency_detected: bool = False
-    overall_severity: float = 0.0
+    severity: float = 0.0
     penalty_factor: float = 0.0
 
     @property
@@ -302,10 +302,10 @@ class RepeatAnalyzer:
         analysis.detected = bool(analysis.patterns)
 
         if not analysis.detected:
-            analysis.overall_severity = 0.0
+            analysis.severity = 0.0
             analysis.penalty_factor = 0.0
             return
 
-        analysis.overall_severity = min(1.0, max(pattern.severity for pattern in analysis.patterns),)
+        analysis.severity = min(1.0, max(pattern.severity for pattern in analysis.patterns),)
 
-        analysis.penalty_factor = analysis.overall_severity
+        analysis.penalty_factor = analysis.severity

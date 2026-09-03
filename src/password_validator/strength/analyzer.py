@@ -80,6 +80,14 @@ class StrengthAnalyzer:
         :param password: The password to analyze.
         :return: A StrengthAnalysis object containing results from all analyzers.
         """
+        if not self.config.enabled:
+            return StrengthAnalysis(
+                dictionary=DictionaryAnalysis(),
+                repeat=RepeatAnalysis(),
+                sequential=SequentialAnalysis(),
+                keyboard=KeyboardAnalysis()
+            )
+
         dictionary_result = self.dictionary_analyzer.analyze(password)
         repeat_result = self.repeat_analyzer.analyze(password)
         sequential_result = self.sequential_analyzer.analyze(password)
