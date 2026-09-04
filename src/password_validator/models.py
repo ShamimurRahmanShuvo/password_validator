@@ -1,13 +1,12 @@
 """
 Contains data models.
 - ValidationResult
-- PasswordStrength
+- ValidationError
 - RuleResult
-- PasswordPolicy
 """
 from dataclasses import dataclass, field
 from typing import Any, List, Optional
-from enums import Rule, StrengthLevel, ErrorCode
+from .enums import Rule, ErrorCode
 
 
 @dataclass(slots=True)
@@ -28,7 +27,7 @@ class ValidationError:
     Represents a validation error for a password.
     """
     rule: Rule
-    code: ErrorCode
+    code: Optional[ErrorCode]
     message: str
 
 
@@ -46,20 +45,24 @@ class ValidationResult:
 
     def add_result(self, result: RuleResult):
         """
-        Adds a rule result to the validation result.
+        Add a rule result to the validation result.
+        A passed rule is added to ``passed``.
+        A failed rule is added to ``failed`` and creates a corresponding ValidationError.
+        Any failed rule makes the overall validation result invalid.
         """
-        if result.passed:
-            self.passed_rules.append(result.rule)
+        self.rule_result.append(result)
 
+        if result.passed:
+            self.passed.append(result.rule)
             return
 
         self.valid = False
 
-        self.failed_rules.append(result.rule)
+        self.failed.append(result.rule)
         self.errors.append(
             ValidationError(
                 rule=result.rule,
                 code=result.error_code,
-                message=result.message
+                message=result.message or ""
             )
         )
