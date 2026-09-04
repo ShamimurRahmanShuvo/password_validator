@@ -3,9 +3,7 @@ Unit tests for the scorer module.
 """
 from __future__ import annotations
 
-import math
 from dataclasses import FrozenInstanceError, replace
-from types import SimpleNamespace
 
 import pytest
 import math
