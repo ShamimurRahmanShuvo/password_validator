@@ -14,11 +14,11 @@ A highly configurable Python password validation library.
 - Django support
 - Custom regex validation
 - Entropy calculation
-- Blacklist support
 - Dictionary validation
-- Username similarity detection
 - Sequential character detection
 - Repeated character detection
+- Common password detection
+- 
 
 ---
 
@@ -89,11 +89,10 @@ No code changes required.
 - Dictionary Words
 - Common Passwords
 - Entropy
-- Username Similarity
 - Custom Regex
 
 ---
 
 ## License
 
-MIT (Dummy for now)
+MIT
