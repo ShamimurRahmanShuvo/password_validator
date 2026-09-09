@@ -2,7 +2,7 @@
 Unit Tests for Models module
 """
 import pytest
-from password_validator.models import RuleResult, ValidationResult, ValidationError
+from password_validator.models import *
 from password_validator.enums import Rule, ErrorCode
 
 
