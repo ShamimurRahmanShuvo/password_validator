@@ -1,13 +1,19 @@
 """
 Password validation engine.
-The validation engine executes password policy rules and returns a structured validation result.
-It does not perform password strength analysis. Strength analysis is handled by password_validator.strength.
+
+The validation engine executes password policy rules and returns a
+structured validation result.
+
+It does not perform password strength analysis. Strength analysis is
+handled by password_validator.strength.
 """
+
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Sequence
+
+from collections.abc import Sequence
 
 from ..config.settings import PasswordRuleConfig
+from ..models import ValidationResult
 from ..rules.base import Rule, RuleResult
 from ..rules.digits import DigitsRule
 from ..rules.length import LengthRule
@@ -16,83 +22,47 @@ from ..rules.special import SpecialCharacterRule
 from ..rules.uppercase import UppercaseRule
 
 
-@dataclass(slots=True, frozen=True)
-class ValidationResult:
-    """
-    Result of password policy validation.
-    """
-    valid: bool
-    passed: tuple[str, ...] = ()
-    failed: tuple[str, ...] = ()
-    errors: tuple[str, ...] = ()
-    rule_results: tuple[RuleResult, ...] = ()
-
-    @property
-    def is_valid(self) -> bool:
-        """
-        Alias for valid
-        :return:
-        """
-        return self.valid
-
-    @property
-    def error_count(self) -> int:
-        """
-        Number of failed rules
-        :return:
-        """
-        return len(self.failed)
-
-
 class PasswordValidator:
     """
     Password policy validation engine.
-    Example:
-        config = PasswordRuleConfig(
-            min_length=10,
-            require_uppercase=True,
-            require_lowercase=True,
-            require_digit=True,
-            require_special=True,
-        )
-
-        validator = PasswordValidator(
-            config=config
-        )
-
-        result = validator.validate(
-            "MyPassword123!"
-        )
-
-        if result.is_valid:
-            print("Password is valid.")
     """
 
-    def __init__(self, config: PasswordRuleConfig | None = None, rules: Sequence[Rule] | None = None) -> None:
+    def __init__(
+        self,
+        config: PasswordRuleConfig | None = None,
+        rules: Sequence[Rule] | None = None,
+    ) -> None:
         """
         Initialize the password validator.
-        :param config: Password policy configuration
-        :param rules: Optional custom rule collection
 
-        If rules are supplied, the validator uses those rules instead of constructing the default rule set. This makes
-        the validator easy to extend and test
+        Args:
+            config: Password policy configuration.
+            rules: Optional custom rule collection.
+
+        When rules are supplied, they completely replace the default
+        rule collection.
         """
-        self.config = config or PasswordRuleConfig()
-        self.config.validate()
 
-        self.rules = list(rules if rules is not None
-                          else self._build_default_rules())
+        self.config = config or PasswordRuleConfig()
+
+        if hasattr(self.config, "validate"):
+            self.config.validate()
+
+        if rules is not None:
+            self.rules = list(rules)
+        else:
+            self.rules = self._build_default_rules()
 
     def _build_default_rules(self) -> list[Rule]:
-        """
-        Build the default password policy rule
-        :return:
-        """
+        """Build the default password policy rule collection."""
+
         rules: list[Rule] = []
 
-        rules.append(LengthRule(
-            min_length=self.config.min_length,
-            max_length=self.config.max_length)
+        rules.append(
+            LengthRule(
+                min_length=self.config.min_length,
+                max_length=self.config.max_length,
+            )
         )
 
         if self.config.require_uppercase:
@@ -105,21 +75,29 @@ class PasswordValidator:
             rules.append(DigitsRule())
 
         if self.config.require_special:
-            rules.append(SpecialCharacterRule(
-                special_characters=(self.config.special_characters)
-            ))
+            rules.append(
+                SpecialCharacterRule(
+                    special_characters=self.config.special_characters,
+                )
+            )
 
         return rules
 
     def validate(self, password: str) -> ValidationResult:
         """
-        Validate the given password against the loaded rules and policy.
+        Validate a password against all configured rules.
 
         Args:
-            password (str): The password to validate.
+            password: Password to validate.
+
         Returns:
-            ValidationResult: The result of the validation, including errors and strength score.
+            ValidationResult containing the overall status and individual
+            rule results.
+
+        Raises:
+            TypeError: If password is not a string.
         """
+
         if not isinstance(password, str):
             raise TypeError("Password must be a string")
 
@@ -130,7 +108,9 @@ class PasswordValidator:
 
         for rule in self.rules:
             result = rule.validate(password)
+
             rule_results.append(result)
+
             rule_name = self._rule_name(rule, result)
 
             if result.passed:
@@ -141,32 +121,48 @@ class PasswordValidator:
                 if result.message:
                     errors.append(result.message)
 
-        valid = not failed
-
         return ValidationResult(
-            valid=valid,
+            valid=not failed,
             passed=tuple(passed),
             failed=tuple(failed),
             errors=tuple(errors),
-            rule_results=tuple(rule_results)
+            rule_results=tuple(rule_results),
         )
 
     @staticmethod
-    def _rule_name(rule: Rule, result: RuleResult) -> str:
+    def _rule_name(
+        rule: Rule,
+        result: RuleResult,
+    ) -> str:
         """
         Resolve a stable rule name.
-        Prefer the RuleResult name when available, otherwise use the rule class name.
-        :param rule:
-        :param result:
-        :return:
-        """
-        name = getattr(result, "rule_name", None)
 
-        if name:
-            return name
+        Resolution order:
+
+        1. RuleResult.rule_name
+        2. rule.name
+        3. Rule class name with the "Rule" suffix removed
+        """
+
+        result_name = getattr(result, "rule_name", None)
+
+        if result_name:
+            return str(result_name)
+
+        rule_name = getattr(rule, "name", None)
+
+        if rule_name:
+            return str(rule_name)
+
         class_name = rule.__class__.__name__
 
         if class_name.endswith("Rule"):
-            class_name = class_name[:4]
+            class_name = class_name[:-4]
 
-        return class_name
+        return class_name.lower()
+
+
+__all__ = [
+    "PasswordValidator",
+    "ValidationResult",
+]

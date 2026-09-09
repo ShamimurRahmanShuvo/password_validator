@@ -48,7 +48,7 @@ class EnvLoader:
 
             if (len(value) >= 2 and
                     value[0] == value[-1] and
-                    value[0] in {'"', '"'}):
+                    value[0] in {'"', "'"}):
                 value = value[1:-1]
 
             self._values[key] = value
@@ -69,7 +69,7 @@ class EnvLoader:
         :param default: The default value if the key is not found.
         :return: The value of the environment variable or the default.
         """
-        return os.getenv(key, default)
+        return self._values.get(key, default)
 
     def get_bool(self, key: str, default: bool = False) -> bool:
         """

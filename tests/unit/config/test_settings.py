@@ -55,9 +55,8 @@ class TestSettingsFromEnv:
         assert settings.rules.require_lowercase is True
         assert settings.rules.require_digit is True
         assert settings.rules.require_special is True
-        assert settings.rules.special_characters == '!@#$%^&*()-_=+[]{}|;:\'",.<>?/`~'
+        assert settings.rules.special_characters == "@#$"
         assert settings.strength is not None
-
 
 
 class TestPasswordRuleConfig:
