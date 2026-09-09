@@ -7,4 +7,3 @@
 - Environment-based configuration
 - Rule engine
 - Strength scoring
-- Plugin architecture
