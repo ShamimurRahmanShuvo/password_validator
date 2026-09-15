@@ -37,7 +37,7 @@ Password Validator Pro separates two concerns:
 ### From PyPI
 
 ```bash
-python -m pip install password-validator
+python -m pip install password-validator-s
 ```
 
 ### From source

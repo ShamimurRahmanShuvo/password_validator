@@ -215,7 +215,7 @@ Do not rely on importing from `src.password_validator` in application code.
 For an application deployment, install the released package into the application's own virtual environment:
 
 ```bash
-python -m pip install password-validator
+python -m pip install password-validator-s
 ```
 
 Pin the package version in the application's dependency management process when reproducibility is required.
