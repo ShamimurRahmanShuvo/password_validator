@@ -35,60 +35,60 @@ jobs:
         run: |
           python -m pytest
 
-build:
-  name: Build distributions
-  needs: test
-  runs-on: ubuntu-latest
-
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v5
-      with:
-        persist-credentials: false
-
-    - name: Set up Python
-      uses: actions/setup-python@v6
-      with:
-        python-version: "3.12"
-
-    - name: Install build
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install build
-
-    - name: Build package
-      run: |
-        python -m build
-
-    - name: Check distributions
-      run: |
-        python -m pip install twine
-        python -m twine check dist/*
-
-    - name: Upload distributions
-      uses: actions/upload-artifact@v5
-      with:
-        name: python-package-distributions
-        path: dist/
-
-publish:
-  name: Publish to PyPI
-  needs: build
-  runs-on: ubuntu-latest
-
-  environment:
-    name: pypi
-    url: https://pypi.org/p/password-validator
-
-    permissions:
-      id-token: write
+  build:
+    name: Build distributions
+    needs: test
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Download distributions
-        uses: actions/download-artifact@v6
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install build
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+
+      - name: Build package
+        run: |
+          python -m build
+
+      - name: Check distributions
+        run: |
+          python -m pip install twine
+          python -m twine check dist/*
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v5
         with:
           name: python-package-distributions
           path: dist/
 
-      - name: Publish package to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/password-validator
+
+      permissions:
+        id-token: write
+
+      steps:
+        - name: Download distributions
+          uses: actions/download-artifact@v6
+          with:
+            name: python-package-distributions
+            path: dist/
+
+        - name: Publish package to PyPI
+          uses: pypa/gh-action-pypi-publish@release/v1
