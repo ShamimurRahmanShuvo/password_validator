@@ -77,7 +77,7 @@ jobs:
 
     environment:
       name: pypi
-      url: https://pypi.org/p/password-validator
+      url: https://pypi.org/p/password-validator-s
 
     permissions:
       id-token: write

@@ -6,7 +6,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "password-validator"
+name = "password-validator-s"
 version = "1.0.0"
 description = "Highly configurable password validation and strength analysis package"
 readme = "README.md"
