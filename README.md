@@ -2,7 +2,7 @@
 
 A configurable Python library for password policy validation and password strength analysis.
 
-**Version:** 1.0.0  
+**Version:** 1.0.2 
 **Python:** 3.10+  
 **License:** MIT
 
